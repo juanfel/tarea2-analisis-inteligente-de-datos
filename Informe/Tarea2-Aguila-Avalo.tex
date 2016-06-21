@@ -40,10 +40,30 @@ ACA INTRO
 
 \section{Regresión Lineal Ordinaria (LSS)}
 
-En esta sección, se estudiará un dataset llamado \textit{protate-cancer}\cite{datos}, que se utiliza a menudo con métodos de regresión. Los datos corresponden a un estudio realizado por Tom Stamey (Universidad de Stanford) en 1989 referente a la posible correlación entre el nivel de antígeno prostático específico (PSA) medido en un paciente, y otras mediciones clínicas que se obtuvieron luego de extirpar totalmente la próstata y los tejidos circundantes. Una de las variables que se estudian corresponden al volumen del cáncer prostático detectado enel paciente.
-
+En esta sección, se estudiará un dataset llamado \textit{prostate-cancer}\cite{D}, que se utiliza a menudo con métodos de regresión. Los datos corresponden a un estudio realizado por Tom Stamey (Universidad de Stanford) en 1989 referente a la posible correlación entre el nivel de antígeno prostático específico (PSA) medido en un paciente, y otras mediciones clínicas que se obtuvieron luego de extirpar totalmente la próstata y los tejidos circundantes. Una de las variables que se estudian corresponden al volumen del cáncer prostático detectado en el paciente.
 
 \subsection{Descripción de los datos}
+En base al dataset, se construye con Python un dataframe de dimensión (97,9), es decir, de 9 variables y 97 datos. A continuación, se describen las variables \cite{DD}:
+
+\begin{itemize}
+\item \textbf{Lcavol: }Variable cuantitativa continua que representa el registro del volumen del cáncer. Toma valores flotantes desde -1,347 hasta 3,821.
+\item \textbf{Lweight: }Variable cuantitativa continua que registra el valor del peso de la próstata. Toma valores flotantes desde 2,375 hasta 4,780. 
+\item \textbf{Age: }Variable cuantitativa de tipo continua que representa la edad en años de la persona. Toma valores enteros desde 41 hasta 79 años.
+\item \textbf{Lbph: }Variable cuantitativa continua que registra la cantidad de hiperplasia prostática benigna (HBP)\footnote{La hiperplasia benigna de próstata (HBP) es un agrandamiento no canceroso de la glándula prostática cuya prevalencia aumenta progresivamente con la edad.}. Toma valores flotantes desde -1,386 hasta 2,326. 
+\item \textbf{Svi: }Variable categórica binaria que representa si existe invasión del cáncer en la vesícula seminal\footnote{Las vesículas o glándulas seminales son las encargadas de producir el 60\% del volumen del líquido seminal. Están ubicadas por encima de la base de la próstata, con la que están unidas por su extremo inferior.}. Toma los siguientes valores: 0: No hay invasión - 1: Si hay invasión. 
+\item \textbf{Lcp: }Variable cuantitativa de tipo contínua que representa el registro de penetración capsular\footnote{La próstata posee una fina envoltura que se conoce como cápsula prostática que define su límite. La penetración capsular es cuando las células cancerígenas se extienden y cruzan dicha envoltura.}. Toma valores flotantes entre -1,386 y 2,904. 
+\item \textbf{Gleason: }Variable categórica ordinal que contiene el puntaje de Gleason\footnote{La escala de Gleason es un sistema que se emplea para medir el grado de agresividad de un cáncer de próstata, basándose en la observación de una muestra de biopsia. Si toma valores entre 2 y 6 corresponde a un cancer con escasa agresividad, si toma valor 7 es un cáncer con agresividad intermedia, mientras que si es de 8 a 10, corresponde a un cáncer de alta agresividad y pero pronóstico.}. Toma valores enteros entre 6 y 9.
+\item \textbf{Pgg45: }Variable cuantitativa contínua que representa el porcentaje del patrón de Gleason 4 y 5\footnote{El porcentaje del patrón de Gleason 4/5 se obtiene agregando los porcentajes de los patrones 4 y 5 de Gleason, es decir, la proporción combinada del tumor compuesto por el patrón 4 o el patrón 5 de Gleason, o ambos.}. Toma valores enteros entre 0 y 100.
+\item \textbf{Lpsa: }Variable cuantitativa continua que corresponde al registro del análisis del antígeno prostático específico (PSA)\footnote{El antígeno prostático específico, o PSA, es una proteína producida por las células de la glándula prostática. El análisis del PSA mide la concentración del PSA en la sangre de un hombre. La concentración del PSA en la sangre es frecuentemente elevada en hombres con cáncer de próstata.}. Toma valores flotantes entre -0,430 hasta 5,583.
+\item \textbf{Train: }Variable categórica nominal que representa si el dato es de tipo Test o de Training. Del total de 97 datos, 67 de ellos corresponden a datos de entrenamiento, mientras que 30 son datos de prueba. Toma los siguientes valores: T: Training set - F: Test set.
+\end{itemize}
+
+\subsection{Desarrollo}
+Para comenzar con el desarrollo de la regresión lineal, en primer lugar se deben normalizar los datos. Este es un paso muy importante, ya que permite ajustar la escala de las variables a la varianza de la unidad, lo que hace que los valores de datos que se encuentran ubicados en los extemos, no ejerzan un peso excesivo en la función objetivo.\\
+
+Luego, al dataset se le debe quitar la columna \textbf{lpsa}, ya que esta formaría el vector y que corresponde a la función que se desea predecir. Al último dataframe, se le inserta una nueva columna llamada \textbf{intercept} copuesta solo de unos. Esto se realiza para que el modelo (ecuación) tenga un desplazmiento constante, el que actúa como intercepción \cite{P2}. Además, si se realiza el ajuste sin esa columna de unos, puede ocurrir que el coeficiente de determinación ($R^2$) pueda ser menor que cero. Es fácil de entender: puede que los regresores ensayados no den cuenta de la variabilidad de $\vec{y}$, y $SSE$ sea por tanto grande. Si acontece que $\vec{y}$ tiene poca variabilidad en torno a su media, $SST$ será en cambio pequeño, y $SST-SSE$ puede fácilmente ser negativo \cite{P1}.\\
+
+Luego, de realizar estos pasos, se realiza una regresión lineal de mínimos cuadrados básica.
 
 
 \section{Selección de Atributos}
