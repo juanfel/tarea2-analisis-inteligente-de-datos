@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 import sklearn.linear_model as lm
 import matplotlib.pyplot as plt
+from scipy import stats
 
 #Procesa el dataframe para el uso posterior
 url = 'http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data'
@@ -26,13 +27,17 @@ y = df_scaled['lpsa']
 def mse(matrix):
     #Calcula el mean square error
     return np.mean(np.power(matrix,2))
-def mse_comparison(x,y,predictions):
+def mse_comparison(x,y,predictions, coefs):
     #Calcula el mse para ese conjunto de datos
     residuals = predictions - y
     return mse(residuals)
-def zscore(x,y,predictions):
+def zscore(x,y,predictions, coefs):
     #Calcula el zscore de la matriz
-   return 0
+    print coefs
+    v = np.linalg.inv(np.dot(x.T,x))
+    vjj = np.diag(v)
+    z_score = coefs/np.sqrt((mse_comparison(x,y,predictions,coefs)*vjj)/(x.shape[0] - x.shape[1]))
+    return z_score
 def fss(x, y, x_test, y_test, names_x, comparison_test = mse_comparison, k = 10000):
     p = x.shape[1]-1
     k = min(p, k)
@@ -54,8 +59,8 @@ def fss(x, y, x_test, y_test, names_x, comparison_test = mse_comparison, k = 100
             fitted_model = model.fit(x_train,y)
             predictions_train = model.predict(x_train)
             predictions_validation = model.predict(x_test_curr)
-            mse_candidate = comparison_test(x_train,y,predictions_train)
-            mse_test = comparison_test(x_test_curr,y_test,predictions_validation)
+            mse_candidate = comparison_test(x_train,y,predictions_train, model.coef_)
+            mse_test = comparison_test(x_test_curr,y_test,predictions_validation, model.coef_)
             score_candidates.append((mse_candidate, mse_test, candidate))
         score_candidates.sort()
         score_candidates[:] = score_candidates[::-1]
