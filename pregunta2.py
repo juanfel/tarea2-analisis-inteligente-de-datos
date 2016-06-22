@@ -32,12 +32,16 @@ def mse_comparison(x,y,predictions, coefs):
     residuals = predictions - y
     return mse(residuals)
 def zscore(x,y,predictions, coefs):
+
     #Calcula el zscore de la matriz
     print coefs
     v = np.linalg.inv(np.dot(x.T,x))
     vjj = np.diag(v)
-    z_score = coefs/np.sqrt((mse_comparison(x,y,predictions,coefs)*vjj)/(x.shape[0] - x.shape[1]))
-    return z_score
+    sigma = ( (predictions - y) ** 2).sum()
+    sigma = sigma/(x.shape[0] - x.shape[1] - 1)
+    z_score = coefs/((np.sqrt(sigma*vjj)))
+    print abs(z_score)
+    return abs(z_score)
 def fss(x, y, x_test, y_test, names_x, comparison_test = mse_comparison, k = 10000):
     p = x.shape[1]-1
     k = min(p, k)
