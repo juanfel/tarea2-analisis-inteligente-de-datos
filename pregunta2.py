@@ -26,8 +26,14 @@ y = df_scaled['lpsa']
 def mse(matrix):
     #Calcula el mean square error
     return np.mean(np.power(matrix,2))
-
-def fss(x, y, x_test, y_test, names_x, comparison_test = mse, k = 10000):
+def mse_comparison(x,y,predictions):
+    #Calcula el mse para ese conjunto de datos
+    residuals = predictions - y
+    return mse(residuals)
+def zscore(x,y,predictions):
+    #Calcula el zscore de la matriz
+   return 0
+def fss(x, y, x_test, y_test, names_x, comparison_test = mse_comparison, k = 10000):
     p = x.shape[1]-1
     k = min(p, k)
     names_x = np.array(names_x)
@@ -48,10 +54,8 @@ def fss(x, y, x_test, y_test, names_x, comparison_test = mse, k = 10000):
             fitted_model = model.fit(x_train,y)
             predictions_train = model.predict(x_train)
             predictions_validation = model.predict(x_test_curr)
-            residuals_train = predictions_train - y
-            residuals_test = predictions_validation - y_test
-            mse_candidate = comparison_test(residuals_train)
-            mse_test = comparison_test(residuals_test)
+            mse_candidate = comparison_test(x_train,y,predictions_train)
+            mse_test = comparison_test(x_test_curr,y_test,predictions_validation)
             score_candidates.append((mse_candidate, mse_test, candidate))
         score_candidates.sort()
         score_candidates[:] = score_candidates[::-1]
