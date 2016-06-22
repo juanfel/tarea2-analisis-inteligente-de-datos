@@ -1,7 +1,9 @@
+#!/usr/bin/python2 
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 import sklearn.linear_model as lm
+import matplotlib.pyplot as plt
 
 #Procesa el dataframe para el uso posterior
 url = 'http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data'
@@ -21,7 +23,11 @@ N = X.shape[0]
 X.insert(X.shape[1], 'intercept', np.ones(N))
 y = df_scaled['lpsa']
 
-def fss(x, y, names_x, k = 10000):
+def mse(matrix):
+    #Calcula el mean square error
+    return np.mean(np.power(matrix,2))
+
+def fss(x, y, x_test, y_test, names_x, comparison_test = mse, k = 10000):
     p = x.shape[1]-1
     k = min(p, k)
     names_x = np.array(names_x)
@@ -29,24 +35,37 @@ def fss(x, y, names_x, k = 10000):
     selected = [p]
     current_score = 0.0
     best_new_score = 0.0
+    #El error que se obtiene al seleccionar desde 0 hasta i atributos
+    training_errors = []
+    test_errors = []
     while remaining and len(selected)<=k :
         score_candidates = []
         for candidate in remaining:
             model = lm.LinearRegression(fit_intercept=False)
             indexes = selected + [candidate]
-            x_train = x[indexes]
-            predictions_train = model.fit(x_train, y).predict(x_train)
+            x_train = x.ix[:,indexes]
+            x_test_curr = x_test.ix[:,indexes]
+            fitted_model = model.fit(x_train,y)
+            predictions_train = model.predict(x_train)
+            predictions_validation = model.predict(x_test_curr)
             residuals_train = predictions_train - y
-            mse_candidate = np.mean(np.power(residuals_train, 2))
-            score_candidates.append((mse_candidate, candidate))
+            residuals_test = predictions_validation - y_test
+            mse_candidate = comparison_test(residuals_train)
+            mse_test = comparison_test(residuals_test)
+            score_candidates.append((mse_candidate, mse_test, candidate))
         score_candidates.sort()
         score_candidates[:] = score_candidates[::-1]
-        best_new_score, best_candidate = score_candidates.pop()
+        best_new_score, best_test,best_candidate = score_candidates.pop()
         remaining.remove(best_candidate)
         selected.append(best_candidate)
+        training_errors.append(best_new_score)
+        test_errors.append(best_test)
         print "selected = %s ..."%names_x[best_candidate]
-        print "totalvars=%d, mse = %f"%(len(indexes),best_new_score)
-    return selected
+        print "totalvars=%d, mse = %f, mse_test = %f"%(len(indexes),best_new_score, best_test)
+    return selected, training_errors, test_errors
 
 names_regressors = ["Lcavol", "Lweight", "Age", "Lbph", "Svi", "Lcp", "Gleason", "Pgg45"]
-fss(X[istrain],y[istrain],names_regressors)
+selected, training_errors, test_errors = fss(X[istrain],y[istrain],X[istest],y[istest],names_regressors)
+plt.plot(np.arange(1,len(training_errors)+1),training_errors)
+plt.plot(np.arange(1,len(training_errors)+1),test_errors)
+plt.show()
