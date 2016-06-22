@@ -5,6 +5,21 @@ import sklearn.linear_model as lm
 import matplotlib.pyplot as plt
 from scipy import stats
 
+def mse(matrix):
+    #Calcula el mean square error
+    return np.mean(np.power(matrix,2))
+def mse_comparison(x,y,predictions, coefs):
+    #Calcula el mse para ese conjunto de datos
+    residuals = predictions - y
+    return mse(residuals)
+def zscore(x,y,predictions, coefs):
+    #Calcula el zscore de la matriz
+    print coefs
+    v = np.linalg.inv(np.dot(x.T,x))
+    vjj = np.diag(v)
+    z_score = coefs/np.sqrt((mse_comparison(x,y,predictions,coefs)*vjj)/(x.shape[0] - x.shape[1]))
+    return z_score
+
 url = 'http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data'
 df = pd.read_csv(url, sep='\t', header=0)
 
@@ -73,9 +88,10 @@ linreg = lm.LinearRegression(fit_intercept = False)
 result = linreg.fit(Xtrain, ytrain)
 
 #zsc = (X - X.mean())/X.std()
-Z = stats.zscore(X['lcavol'])
+#Z = stats.zscore(X['lcavol'])
 
-
+Z = zscore(X, y, linreg.predict(X), linreg.coef_)
+print Z
 #print zsc['lcavol']
 #print linreg.coef_
 #print("Residual sum of squares: %.2f" % np.mean((linreg.predict(Xtest) - ytest) ** 2))
