@@ -129,6 +129,99 @@ Del gráfico, se puede ver que sí se puede afirmar que tenga sentido que los re
 
 \section{Selección de Atributos}
 
+\subsection{Forward Step-wise Selection}
+
+Usando el mismo dataframe anterior primero se ocupó el algoritmo de
+\textit{Forward Step-wise Selection}(FSS) para selección de atributos. Dicho
+algoritmo consiste en partir con un modelo lineal sin predictores, e ir
+agregando uno por uno cada predictor, seleccionando el que tenga mejores
+resultados de acuerdo a algún test dado. Luego de esa selección, se repite el
+procedimiento con los atributos restantes hasta que quede un modelo con la
+cantidad deseada de variables.\\
+
+En la versión que se usó de base para hacer selección de atributos por FSS la
+función usada para darle puntaje a cada variable era simplemente \textit{mean
+  squared error}. De estos se seleccionaba el que diera menor error.
+
+En la implementación presentada en éste trabajo se prefirió
+usar el \textit{zscore} de cada variable. La razón de ésto es porque, para
+elegir localmente una variable, basta ordenar el valor absoluto de los
+\textit{zscore} de cada una de ellas y escoger el mayor de todos.
+
+Para el análisis se va a ignorar la presencia del intercepto, la cual siempre se
+selecciona.\\
+
+Antes de comentar los resultados, hay que mencionar que la diferencia entre usar
+\textit{mse} y \textit{zscore} no debiese ser muy distinta. En particular, se puede
+analizar la función \textit{zscore}, definida como:
+\begin{equation}
+  z_j = \frac{\beta^\hat_j}{\sigma^\hat\sqrt{v_{j}}
+\end{equation}
+Donde $\beta^\hat_j$ es el coeficiente del modelo lineal $j$, $sigma^\hat$ es la
+desviación estándar de los resultados del modelo, y $v_j$ es el componente
+$j$-ésimo de la matriz $X^TX$.
+
+Ésta función es más grande a medida que $\sigma^\hat$ sea pequeño. $\sigma^\hat$
+es proporcional al \textit{mse} por lo que, manteniéndose todas las otras
+variables igual, hace que ambas funciones tengan comportamientos similares al
+momento de escoger. \\
+
+Como resultado de aplicar \textit{FSS} se seleccionaron los atributos con el
+siguiente orden:
+\begin{enumerate}
+\item Lcavol 
+\item Lweigh
+\item Svi
+\item Lbph
+\item Pgg45
+\item Lcp
+\item Age
+\item Gleason   
+\end{enumerate}
+
+El gráfico que muestra el error de entrenamiento vs el error de test se
+muestra a continuación:
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=0.6\textwidth]{p2_fig1} 
+  \caption{Error de entrenamiento vs error de test para Forward Step-wise
+    Selection. A simple vista se puede observar un valor óptimo donde conviene
+    dejar de seleccionar variables. }
+  \label{fig:p2_g1}
+\end{figure}
+
+En la imagen se muestra un patrón de subajuste y sobreajuste a medida que se
+aumenta el numero de variables. El error de entrenamiento siempre cae como es
+esperado, pero el error de test parte siendo menor al de entrenamiento, pero al
+escoger más variables sube también su error. En este caso, después de 5
+variables no conviene escoger mas variables porque se produce mucho sobreajuste.
+
+\subsection{Backward Step-wise Selection}
+
+El algoritmo \textit{Backward Step-wise Selection}(BSS) funciona de forma
+similar a FSS, excepto que parte con un modelo hecho con todas las variables, y
+se van quitando una a una, escogiendo la que esté con peor puntaje que el resto.\\
+
+La implementación es similar a FSS. También se usó zscore para calcular quién
+debe dejar el conjunto de variables, pero en este caso, se escogió a los que
+peor salieron evaluados.\\
+
+
+El orden de selección de atributos es exactamente el mismo que en FSS pero
+invertido. Ésto es esperado, ya que la forma de ordenar a las variables es la
+misma pero se selecciona el peor en vez del mejor.
+
+El comportamiento en general en éste dataset es similar en ambos casos, lo cual
+se puede confirmar con su gráfico asociado.
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[width=0.6\textwidth]{p2_fig2} 
+  \caption{Error de entrenamiento vs error de test para Backward Step-wise
+    Selection. Tiene el mismo comportamiento que FSS.}
+  \label{fig:p2_g2}
+\end{figure}
 \section{Regularización}
 
 \section{Predicción de Utilidades de Películas}
