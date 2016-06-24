@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 import sklearn.linear_model as lm
 import matplotlib.pyplot as plt
 from scipy import stats
+from sklearn.metrics import mean_squared_error 
 
 #Procesa el dataframe para el uso posterior
 url = 'http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data'
@@ -29,14 +30,13 @@ def mse(matrix):
     return np.mean(np.power(matrix,2))
 def mse_comparison(x,y,predictions, coefs, index):
     #Calcula el mse para ese conjunto de datos
-    residuals = predictions - y
-    return mse(residuals)
+    return mean_squared_error(y,predictions)
 def zscore(x,y,predictions, coefs, index):
 
     #Calcula el zscore de los coeficientes, devuelve el zscore(index)
     v = np.linalg.inv(np.dot(x.T,x))
     vjj = np.diag(v)
-    sigma = ( (predictions - y) ** 2).sum()
+    sigma =  mean_squared_error(y,predictions)*x.shape[0]
     sigma = sigma/(x.shape[0] - x.shape[1] - 1)
     z_score = coefs/((np.sqrt(sigma*vjj)))
     return abs(z_score[index])
