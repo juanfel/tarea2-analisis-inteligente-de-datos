@@ -115,9 +115,9 @@ def bss(x,y,x_test,y_test,names_x, comparison_test = zscore, k = 100):
         #Fitea el modelo lineal para todos los que quedan.
         #Luego va viendo uno por uno cual es el que tiene peor valor y lo quita
         score_candidates = []
-        model = lm.LinearRegression(fit_intercept=False)
         indexes = []
-        indexes[:] = remaining[:]
+        model = lm.LinearRegression(fit_intercept=False)
+        indexes = remaining + [p]
         x_train = x.ix[:,indexes]
         x_test_curr = x_test.ix[:,indexes]
         fitted_model = model.fit(x_train,y)
@@ -152,3 +152,4 @@ plt.legend(loc=2)
 plt.xlabel("Numero de variables")
 plt.ylabel("Scores")
 plt.show()
+
