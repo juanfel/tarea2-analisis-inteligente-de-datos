@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
 import matplotlib.pylab as plt
 #Funciones
 def regularizate(Xtrain,ytrain,names_regressors,model,alphas, title):
@@ -58,3 +59,8 @@ model = Ridge(fit_intercept=True,solver='svd')
 regularizate(Xtrain,ytrain,names_regressors,model,alphas_,"RIDGE")
 
 #Pregunta b
+alphas_ = np.logspace(1,-2,base=10)
+clf = Lasso(fit_intercept=True)
+regularizate(Xtrain,ytrain,names_regressors,clf,alphas_,"LASSO")
+
+#Pregunta c
