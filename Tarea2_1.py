@@ -5,21 +5,12 @@ import sklearn.linear_model as lm
 import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.metrics import mean_squared_error 
+from sklearn import cross_validation
+import statsmodels.api as sm 
+plt.style.use('ggplot')
 
-def mse(matrix):
-    #Calcula el mean square error
-    return np.mean(np.power(matrix,2))
-def mse_comparison(x,y,predictions, coefs):
-    #Calcula el mse para ese conjunto de datos
-    residuals = predictions - y
-    return mse(residuals)
-def zscore(x,y,predictions, coefs):
-    #Calcula el zscore de la matriz
-    print coefs
-    v = np.linalg.inv(np.dot(x.T,x))
-    vjj = np.diag(v)
-    z_score = coefs/np.sqrt((mse_comparison(x,y,predictions,coefs)*vjj)/(x.shape[0] - x.shape[1]))
-    return z_score
+######## Pregunta (a) ############################################################
+
 
 url = 'http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data'
 df = pd.read_csv(url, sep='\t', header=0)
@@ -43,22 +34,30 @@ istest = np.logical_not(istrain)
 # arreglos anteriores
 df = df.drop('train', axis=1)
 
+######## Pregunta (b) ############################################################
+
 # Informa la dimension del dataframe de la forma (num de filas, num columnas)
-#print df.shape
+print df.shape
 
 # Se muestra informacion de las columnas como son la cantidad de filas, si la
 # columna tiene valores nulos y el tipo de dato que contiene.
-#print df.info()
+print df.info()
 
 # Se muestra una completa descripcion de los datos, como son la media, 
 # el valor minimo, el valor maximo, los percentiles 1, 2 y 3, y otros valores
-#print df.describe()
+print df.describe()
+
+
+######## Pregunta (c) ############################################################
 
 # Se instancia 
 scaler = StandardScaler()
 # Se crea un nuevo dataframe df_scaled con los datos normalizados
 df_scaled = pd.DataFrame(scaler.fit_transform(df), columns=df.columns)
 df_scaled['lpsa'] = df['lpsa']
+
+
+######## Pregunta (d) ############################################################
 
 # Se saca la ultima columna lpsa
 X = df_scaled.ix[:,:-1]
@@ -89,6 +88,8 @@ linreg = lm.LinearRegression(fit_intercept = False)
 result = linreg.fit(Xtrain, ytrain)
 
 
+######## Pregunta (e) ############################################################
+
 # Funcion que calcula la desviacion estandar
 def desvest(mse, n, j):
 	desv_est = np.sqrt(mse * n / (n - j - 1))
@@ -104,9 +105,9 @@ def zzscore(coef, desv_est, diagonal):
 
 
 # Se obtiene el valor de y estimado para los datos de entrenamiento
-yptrain = linreg.predict(Xtrain) 
+yhat_train = linreg.predict(Xtrain) 
 # Se calcula el error cuadratico medio de los datos de entrenamiento
-msetrain = mean_squared_error(ytrain, yptrain) 
+msetrain = mean_squared_error(ytrain, yhat_train) 
 # Para realizar las iteraciones, se guarda en n la cantidad de datos, en este caso,
 # son 67 datos de entrenamiento
 n = ytrain.shape[0]
@@ -121,22 +122,42 @@ diag_val = diagval(Xtrain)
 Zscores = zzscore(linreg.coef_, desv_est, diag_val)
 print Zscores
 
-#print zsc['lcavol']
-#print linreg.coef_
-#print("Residual sum of squares: %.2f" % np.mean((linreg.predict(Xtest) - ytest) ** 2))
-#print('Varianza explicada: %.2f\n' % linreg.score(Xtest, ytest))
+######## Pregunta (f) ############################################################
 
+# Se obtiene el valor de y estimado para los datos de test
 yhat_test = linreg.predict(Xtest)
-mse_test = np.mean(np.power(yhat_test - ytest, 2))
-from sklearn import cross_validation
+# Se calcula el error cuadratico medio de los datos de test
+msetest = mean_squared_error(ytest, yhat_test) 
+print "mse para test: ", msetest
 Xm = Xtrain.as_matrix()
 ym = ytrain.as_matrix()
-k_fold = cross_validation.KFold(len(Xm),10)
-mse_cv = 0
-for k, (train, val) in enumerate(k_fold):
-	linreg = lm.LinearRegression(fit_intercept = False)
-	linreg.fit(Xm[train], ym[train])
-	yhat_val = linreg.predict(Xm[val])
-	mse_fold = np.mean(np.power(yhat_val - ym[val], 2))
-	mse_cv += mse_fold
-mse_cv = mse_cv / 10
+
+# Funcion que realiza las iteraciones del cross validation
+def itcrossval(kf, X, Y):
+	k_fold = cross_validation.KFold(len(X),kf)
+	mse_cv = 0
+	for k, (train, val) in enumerate(k_fold):
+		linreg = lm.LinearRegression(fit_intercept = False)
+		linreg.fit(X[train], Y[train])
+		yhat_val = linreg.predict(X[val])
+		mse_fold = mean_squared_error(Y[val], yhat_val)
+		mse_cv += mse_fold
+	mse_cv = mse_cv / kf
+	return mse_cv
+
+# Validacion cruzada para k=5
+print "mse para training con k=5: ", itcrossval(5, Xm, ym)
+
+# Validacion cruzada para k=10
+print "mse para training con k=10: ", itcrossval(10, Xm, ym)
+
+
+######## Pregunta (j) ############################################################
+
+# Se calcula el error de prediccion sobre todos los datos de entrenamiento
+errorp = ytrain - yhat_train
+print "Error de prediccion sobre training set: \n", errorp
+
+# Se realiza un quantile-quntile plot
+graf = sm.qqplot(yhat_train - ytrain, fit=True, line='45') 
+plt.show() 
