@@ -224,6 +224,106 @@ se puede confirmar con su gráfico asociado.
 \end{figure}
 \section{Regularización}
 
+\subsection{Ridge Regression}
+\textit{Ridge Regression} es un método de regularización para modelos
+lineales.\\
+
+Notar que en éste tipo de regresión los cálculos se hacen más fácil de obtener,
+al menos en forma conceptual, si se procede a centrar los datos usando su media.
+En el código no se asume que los datos fueron centrados, por lo que al asignar
+\texttt{fit_intercept=True} a los modelos, éstos también asumen que los datos no
+se centraron, por lo que hace el calculo del intercepto además del resto.
+
+
+Es por lo último que se tiene que quitar del dataframe la columna
+correspondiente al intercepto, porque la función Ridge va a hacer su ``fit''
+como si dicha columna fuera un dato más, lo cual no es conveniente.\\
+
+
+En el trabajo se aplicaron parámetros de regularización en el rango de $\lambda
+\in [10^4,10^-1]$ mediante una escala logarítmica. Los resultados están resumidos
+en el siguiente gráfico:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{p3_fig1} 
+  \caption{Gráfico del camino de regularización de Ridge Regression. A medida
+    que disminuye $\lambda$ se obtiene una mayor diferenciación entre cada atributo.}
+  \label{fig:p3_g1}
+\end{figure}
+
+Al disminuir el parámetro de regularización se vé como los pesos de cada
+atributo empiezan a diferenciarse más. Con $\lambda$ más grande los atributos
+empiezan a converger a un mismo peso.
+\subsection{Lasso Regression}
+\textit{Lasso Regression}hace el mismo trabajo que Ridge, pero también tiene
+funciones en reducción de variables.\\
+
+Ocupando un $\lambda \in [10^1,10^-2]$ en escala logarítmica, se generó el
+siguiente gráfico para Lasso:
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{p3_fig2} 
+  \caption{Gráfico del camino de regularización de Lasso Regression.}
+  \label{fig:p3_g1}
+\end{figure}
+
+A diferencia de Ridge, Lasso directamente elimina variables a medida que aumenta
+su $\lambda$. En el caso anterior con valores de regularización altos igual
+habían trazas de variables que en realidad son insignificantes. En el caso de
+Lasso las variables que menos aportan son sistemáticamente hechas cero, llegando
+un punto donde no todos los atributos tienen peso nulo.
+
+\subsection{Error de pruebas de Ridge Regression}
+El error de pruebas obtenido para Ridge Regression se encuentra en el gráfico
+siguiente:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{p3_fig3} 
+  \caption{Error de pruebas vs error de entrenamiento para RIDGE. Se puede
+    observar el patrón de sobre y subajuste.}
+  \label{fig:p3_g2}
+\end{figure}
+
+Se puede observar que el punto donde ambos errores son iguales está entre 10 y
+100. Si se trata de escoger $\lambda$ usando éste criterio se debería considerar
+mejor escoger un valor superior a 10 para evitar el sobreajuste.
+\subsection{Error de pruebas de Lasso Regression}
+Los errores de entrenamiento y pruebas para Lasso Regression se encuentran
+resumidos en el siguiente gráfico:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.6\textwidth]{p3_fig4} 
+  \caption{Error de pruebas vs error de entrenamiento para RIDGE. Se puede
+    observar el patrón de sobre y subajuste.}
+  \label{fig:p3_g2}
+\end{figure}
+
+En este gráfico se puede observar que el punto donde no hay ni underfitting ni
+overfitting está entre $\lambda$ igual a 0.1 y 0.01. Por otro lado, el error de
+test empieza a aumentar entre 1 y 0.1.
+
+Hay que mencionar que existe una anomalía en $\lambda = 1$. El error de
+entrenamiento se mantiene constante después de ese punto, al igual que el de
+test. Esto corresponde a que en ese punto todas las variables tienen peso 0, por
+lo cual no hay error que medir.
+\subsection{Encontrar los valores optimos para cada tipo de regularizador}
+Usando los gráficos se puede tener una idea del valor óptimo, pero por el rango
+no se puede dar un número exacto. Para encontrar dicho valor se usará kfold
+cross validation con $K = 10$ cajas.
+
+Para Ridge, cross validation encontró que el mejor parámetro es 2.442053 con un
+$MSE = 0.751881$. Esto está en territorio de sobreajuste de acuerdo al gráfico.
+Pero también es el punto donde el error de test está en su mínimo, de acuerdo al
+gráfico, así que tiene sentido usar dicho valor de $\lambda$.\\
+
+En el caso de Lasso, el resultado es exactamente $\lambda = 0.01$. Éste es el punto donde el
+error de test empieza a subir. Por otra parte, a diferencia del caso anterior,
+se encuentra firmemente en territorio de underfitting.
 \section{Predicción de Utilidades de Películas}
 
 \section{Conclusiones}
