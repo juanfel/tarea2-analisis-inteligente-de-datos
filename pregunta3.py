@@ -28,7 +28,27 @@ def regularizate(Xtrain,ytrain,names_regressors,model,alphas, title):
     plt.axis('tight')
     plt.legend(loc=2)
     plt.show()
-    
+
+def geterrors(Xtrain,ytrain,Xtest,ytest,names_regressors,model,alphas_,title):
+    #Obtiene los gráficos de los errores de test y entrenamiento para el
+    #modelo dado
+    coefs = []
+    mse_test = []
+    mse_train = []
+    for a in alphas_:
+        model.set_params(alpha=a)
+        model.fit(Xtrain, ytrain)
+        yhat_train = model.predict(Xtrain)
+        yhat_test = model.predict(Xtest)
+        mse_train.append(np.mean(np.power(yhat_train - ytrain, 2)))
+        mse_test.append(np.mean(np.power(yhat_test - ytest, 2)))
+    ax = plt.gca()
+    ax.plot(alphas_,mse_train,label='train error ' + title)
+    ax.plot(alphas_,mse_test,label='test error ' + title)
+    plt.legend(loc=2)
+    ax.set_xscale('log')
+    ax.set_xlim(ax.get_xlim()[::-1])
+    plt.show()
 #Seteo de datos
 url = 'http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data'
 df = pd.read_csv(url, sep='\t', header=0)
@@ -64,3 +84,8 @@ clf = Lasso(fit_intercept=True)
 regularizate(Xtrain,ytrain,names_regressors,clf,alphas_,"LASSO")
 
 #Pregunta c
+Xtest = X[np.logical_not(istrain)]
+ytest = y[np.logical_not(istrain)]
+alphas_ = np.logspace(2,-2,base=10)
+model = Ridge(fit_intercept=True)
+geterrors(Xtrain,ytrain,Xtest,ytest,names_regressors,model,alphas_,"RIDGE")
