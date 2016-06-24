@@ -6,6 +6,7 @@ from scipy import stats
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 import matplotlib.pylab as plt
+from sklearn import cross_validation
 #Funciones
 def regularizate(Xtrain,ytrain,names_regressors,model,alphas, title):
     #Regulariza de acuerdo a la función modelo y a los alphas dados
@@ -49,6 +50,21 @@ def geterrors(Xtrain,ytrain,Xtest,ytest,names_regressors,model,alphas_,title):
     ax.set_xscale('log')
     ax.set_xlim(ax.get_xlim()[::-1])
     plt.show()
+
+def MSE(y,yhat): return np.mean(np.power(y-yhat,2))
+def kfoldcrossval(Xtrain,ytrain,names_regressors,model,alphas,title):
+    #Hace la validación cruzada del modelo
+    Xm = Xtrain.as_matrix()
+    ym = ytrain.as_matrix()
+    k_fold = cross_validation.KFold(len(Xm),10)
+    best_cv_mse = float("inf")
+    for a in alphas_:
+        model.set_params(alpha=a)
+        mse_list_k10 = [MSE(model.fit(Xm[train], ym[train]).predict(Xm[val]), ym[val]) for train, val in k_fold]
+        if np.mean(mse_list_k10) < best_cv_mse:
+            best_cv_mse = np.mean(mse_list_k10)
+            best_alpha = a
+            print "BEST PARAMETER %s =%f, MSE(CV)=%f"%(title,best_alpha,best_cv_mse)
 #Seteo de datos
 url = 'http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data'
 df = pd.read_csv(url, sep='\t', header=0)
@@ -89,3 +105,17 @@ ytest = y[np.logical_not(istrain)]
 alphas_ = np.logspace(2,-2,base=10)
 model = Ridge(fit_intercept=True)
 geterrors(Xtrain,ytrain,Xtest,ytest,names_regressors,model,alphas_,"RIDGE")
+
+#Pregunta d
+alphas_ = np.logspace(1,-2,base=10)
+clf = Lasso(fit_intercept=True)
+geterrors(Xtrain,ytrain,Xtest,ytest,names_regressors,clf,alphas_,"RIDGE")
+
+#Pregunta e
+model = Ridge(fit_intercept=True)
+alphas_ = np.logspace(2,-2,base=10)
+kfoldcrossval(Xtrain,ytrain,names_regressors,model,alphas_,"RIDGE")
+
+clf = Lasso(fit_intercept=True)
+alphas_ = np.logspace(1,-2,base=10)
+kfoldcrossval(Xtrain,ytrain,names_regressors,model,alphas_,"LASSO")
