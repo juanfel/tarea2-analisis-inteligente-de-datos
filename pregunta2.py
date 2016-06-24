@@ -5,6 +5,7 @@ from sklearn.preprocessing import StandardScaler
 import sklearn.linear_model as lm
 import matplotlib.pyplot as plt
 from scipy import stats
+from sklearn.metrics import mean_squared_error 
 
 #Procesa el dataframe para el uso posterior
 url = 'http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data'
@@ -29,14 +30,12 @@ def mse(matrix):
     return np.mean(np.power(matrix,2))
 def mse_comparison(x,y,predictions, coefs, index):
     #Calcula el mse para ese conjunto de datos
-    residuals = predictions - y
-    return mse(residuals)
+    return mean_squared_error(y,predictions)
 def zscore(x,y,predictions, coefs, index):
-
     #Calcula el zscore de los coeficientes, devuelve el zscore(index)
     v = np.linalg.inv(np.dot(x.T,x))
     vjj = np.diag(v)
-    sigma = ( (predictions - y) ** 2).sum()
+    sigma =  mean_squared_error(y,predictions)*x.shape[0]
     sigma = sigma/(x.shape[0] - x.shape[1] - 1)
     z_score = coefs/((np.sqrt(sigma*vjj)))
     return abs(z_score[index])
@@ -54,6 +53,7 @@ def fss(x, y, x_test, y_test, names_x, comparison_test = mse_comparison, k = 100
     while remaining and len(selected)<=k :
         score_candidates = []
         for candidate in remaining:
+            #Crea el modelo lineal del candidato
             model = lm.LinearRegression(fit_intercept=False)
             indexes = selected + [candidate]
             x_train = x.ix[:,indexes]
@@ -85,14 +85,17 @@ def fss(x, y, x_test, y_test, names_x, comparison_test = mse_comparison, k = 100
 names_regressors = ["Lcavol", "Lweight", "Age", "Lbph", "Svi", "Lcp", "Gleason", "Pgg45"]
 
 selected, training_errors, test_errors = fss(X[istrain],y[istrain],X[istest],y[istest],names_regressors, zscore)
-plt.plot(np.arange(1,len(training_errors)+1),training_errors)
-plt.plot(np.arange(1,len(training_errors)+1),test_errors)
+plt.plot(np.arange(1,len(training_errors)+1),training_errors, label = "Error de entrenamiento")
+plt.plot(np.arange(1,len(training_errors)+1),test_errors, label = "Error de test")
+plt.legend(loc=2)
+plt.xlabel("Numero de variables")
+plt.ylabel("Scores")
 plt.show()
 
-selected, training_errors, test_errors = fss(X[istrain],y[istrain],X[istest],y[istest],names_regressors)
-plt.plot(np.arange(1,len(training_errors)+1),training_errors)
-plt.plot(np.arange(1,len(training_errors)+1),test_errors)
-plt.show()
+# selected, training_errors, test_errors = fss(X[istrain],y[istrain],X[istest],y[istest],names_regressors)
+# plt.plot(np.arange(1,len(training_errors)+1),training_errors)
+# plt.plot(np.arange(1,len(training_errors)+1),test_errors)
+# plt.show()
 
 #BSS
 def bss(x,y,x_test,y_test,names_x, comparison_test = zscore, k = 100):
@@ -112,9 +115,9 @@ def bss(x,y,x_test,y_test,names_x, comparison_test = zscore, k = 100):
         #Fitea el modelo lineal para todos los que quedan.
         #Luego va viendo uno por uno cual es el que tiene peor valor y lo quita
         score_candidates = []
-        model = lm.LinearRegression(fit_intercept=False)
         indexes = []
-        indexes[:] = remaining[:]
+        model = lm.LinearRegression(fit_intercept=False)
+        indexes = remaining + [p]
         x_train = x.ix[:,indexes]
         x_test_curr = x_test.ix[:,indexes]
         fitted_model = model.fit(x_train,y)
@@ -143,6 +146,10 @@ def bss(x,y,x_test,y_test,names_x, comparison_test = zscore, k = 100):
     return selected, remaining, training_errors, test_errors
 
 selected, remaining, training_errors, test_errors = bss(X[istrain],y[istrain],X[istest],y[istest],names_regressors, zscore)
-plt.plot(np.arange(1,len(training_errors)+1)[::-1],training_errors)
-plt.plot(np.arange(1,len(training_errors)+1)[::-1],test_errors)
+plt.plot(np.arange(1,len(training_errors)+1)[::-1],training_errors, label="Error de entrenamiento")
+plt.plot(np.arange(1,len(training_errors)+1)[::-1],test_errors, label = "Error de test")
+plt.legend(loc=2)
+plt.xlabel("Numero de variables")
+plt.ylabel("Scores")
 plt.show()
+

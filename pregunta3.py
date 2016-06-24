@@ -52,7 +52,7 @@ def geterrors(Xtrain,ytrain,Xtest,ytest,names_regressors,model,alphas_,title):
     plt.show()
 
 def MSE(y,yhat): return np.mean(np.power(y-yhat,2))
-def kfoldcrossval(Xtrain,ytrain,names_regressors,model,alphas,title):
+def kfoldcrossval(Xtrain,ytrain,names_regressors,model,alphas_,title):
     #Hace la validación cruzada del modelo
     Xm = Xtrain.as_matrix()
     ym = ytrain.as_matrix()
@@ -118,4 +118,4 @@ kfoldcrossval(Xtrain,ytrain,names_regressors,model,alphas_,"RIDGE")
 
 clf = Lasso(fit_intercept=True)
 alphas_ = np.logspace(1,-2,base=10)
-kfoldcrossval(Xtrain,ytrain,names_regressors,model,alphas_,"LASSO")
+kfoldcrossval(Xtrain,ytrain,names_regressors,clf,alphas_,"LASSO")
