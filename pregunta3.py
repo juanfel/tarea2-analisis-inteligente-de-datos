@@ -8,6 +8,7 @@ import matplotlib.pylab as plt
 #Funciones
 def regularizate(Xtrain,ytrain,names_regressors,model,alphas, title):
     #Regulariza de acuerdo a la función modelo y a los alphas dados
+    coefs = []
     for a in alphas:
         model.set_params(alpha=a)
         model.fit(Xtrain, ytrain)
