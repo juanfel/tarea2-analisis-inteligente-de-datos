@@ -35,8 +35,6 @@
 \end{center}
 \end{figure}
 \vspace{2cm}
-\section{Introducci\'on}
-ACA INTRO
 
 \section{Regresión Lineal Ordinaria (LSS)}
 
@@ -133,9 +131,29 @@ Del gráfico, se puede ver que sí se puede afirmar que tenga sentido que los re
 
 \section{Predicción de Utilidades de Películas}
 
-\section{Conclusiones}
+Para esta sección, se trabajó con un conjunto de datos sobre películas vistas en cines de Estados Unidos durante los años 2005 y 2009. Lo que se desea predecir es el volumen de utilidades (en dólares) que se obtienen por el estreno de una película.\\
 
-ACA CONCLUSIONES
+Las películas se representan a través de diversos atributos de tipo texto o metadata. Los textos corresponden a críticas realizadas antes del estreno en diversos sitios. Los metadatas están compuestos por 7 variables, como por ejemplo, cantidad de puntos en donde se proyecta la película, el género, la calificación de la MPAA, número de actores con premio OSCAR, entre otros.\\
+
+Los datos están contenidos en archivos, los cuales se cargan a través de python guardándolos en matrices, con la finalidad de aplicar algún modelo lineal que permita predecir la utilidad con un coeficiente de determinación de al menos 0,75.\\
+
+A continuación, se muestra una tabla resumen con los datos obtenidos con los diferentes modelos lineales que se intentó resolver el problema con un $R^2$ de al menos 0,75.
+
+\begin{table}[!hbt] 
+\begin{center}
+\begin{tabular}{| r | c | c |} 
+\hline
+\textbf{Modelo Lineal} & \textbf{MSE} & \textbf{$R^2$}\\ 
+\hline 
+Lineal Regression & 114061929.788 & 0.182\\ 
+Ridge Regression &-- & --\\
+Lasso Regression &--& --\\
+\hline 
+\end{tabular}
+\caption{Resumen con los distintos métodos utilizados.} 
+\label{table:peliculas}
+\end{center} 
+\end{table}
 
 \bibliographystyle{plain}
 \bibliography{Referencias}
