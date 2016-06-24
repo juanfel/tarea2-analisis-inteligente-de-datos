@@ -182,7 +182,11 @@ muestra a continuación:
 
 \begin{figure}[H]
   \centering
+<<<<<<< HEAD
  \includegraphics[width=0.6\textwidth]{Images/p2_fig1} 
+=======
+ \includegraphics[width=0.6\textwidth]{Images/p2_fig1.png} 
+>>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Error de entrenamiento vs error de test para Forward Step-wise
     Selection. A simple vista se puede observar un valor óptimo donde conviene
     dejar de seleccionar variables. }
@@ -215,7 +219,11 @@ se puede confirmar con su gráfico asociado.
 
 \begin{figure}[H]
   \centering
+<<<<<<< HEAD
  \includegraphics[width=0.6\textwidth]{Images/p2_fig2} 
+=======
+ \includegraphics[width=0.6\textwidth]{Images/p2_fig2.png} 
+>>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Error de entrenamiento vs error de test para Backward Step-wise
     Selection. Tiene el mismo comportamiento que FSS.}
   \label{fig:p2_g2}
@@ -244,7 +252,11 @@ en el siguiente gráfico:
 
 \begin{figure}[H]
   \centering
+<<<<<<< HEAD
   \includegraphics[width=0.6\textwidth]{Images/p3_fig1} 
+=======
+  \includegraphics[width=0.6\textwidth]{Images/p3_fig1.png} 
+>>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Gráfico del camino de regularización de Ridge Regression. A medida
     que disminuye $\lambda$ se obtiene una mayor diferenciación entre cada atributo.}
   \label{fig:p3_g1}
@@ -263,7 +275,11 @@ siguiente gráfico para Lasso:
 
 \begin{figure}[H]
   \centering
+<<<<<<< HEAD
   \includegraphics[width=0.6\textwidth]{Images/p3_fig2} 
+=======
+  \includegraphics[width=0.6\textwidth]{Images/p3_fig2.png} 
+>>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Gráfico del camino de regularización de Lasso Regression.}
   \label{fig:p3_g1}
 \end{figure}
@@ -280,7 +296,11 @@ siguiente:
 
 \begin{figure}[H]
   \centering
+<<<<<<< HEAD
   \includegraphics[width=0.6\textwidth]{Images/p3_fig3} 
+=======
+  \includegraphics[width=0.6\textwidth]{Images/p3_fig3.png} 
+>>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Error de pruebas vs error de entrenamiento para RIDGE. Se puede
     observar el patrón de sobre y subajuste.}
   \label{fig:p3_g2}
@@ -295,7 +315,11 @@ resumidos en el siguiente gráfico:
 
 \begin{figure}[H]
   \centering
+<<<<<<< HEAD
   \includegraphics[width=0.6\textwidth]{Images/p3_fig4} 
+=======
+  \includegraphics[width=0.6\textwidth]{Images/p3_fig4.png} 
+>>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Error de pruebas vs error de entrenamiento para RIDGE. Se puede
     observar el patrón de sobre y subajuste.}
   \label{fig:p3_g2}
@@ -336,17 +360,20 @@ A continuación, se muestra una tabla resumen con los datos obtenidos con los di
 \begin{center}
 \begin{tabular}{| r | c | c |} 
 \hline
-\textbf{Modelo Lineal} & \textbf{MSE} & \textbf{$R^2$}\\ 
+\textbf{Modelo Lineal} & \textbf{$R^2$}\\ 
 \hline 
-Lineal Regression & 114061929.788 & 0.182\\ 
-Ridge Regression &-- & --\\
-Lasso Regression &--& --\\
+Lineal Regression & 0.182\\ 
+Ridge Regression & 0.590\\
 \hline 
 \end{tabular}
 \caption{Resumen con los distintos métodos utilizados.} 
 \label{table:peliculas}
 \end{center} 
 \end{table}
+
+De la Tabla \ref{peliculas}, se observa que el que tuvo mejores resultados, o acercándose al esperado de 0.75, fue el modelo de Ridge, utilizando un alpha de 0.2. Se intentó en primer lugar, con el modelo de regresión lineal ordinario, pero dio resultados bastante malos. También se realizó con Lasso Regression, pero con este modelo se obtenían resultados negativos. \\
+
+Finalmente, con ninguno de los 3 modelos se pudo obtener un coeficiente de determinación superior al 0.59, por lo que Ridge Regression es el modelo que mejor funcionó.
 
 \bibliographystyle{plain}
 \bibliography{Referencias}
