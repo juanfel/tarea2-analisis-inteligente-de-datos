@@ -4,6 +4,7 @@ from sklearn.preprocessing import StandardScaler
 import sklearn.linear_model as lm
 import matplotlib.pyplot as plt
 from scipy import stats
+from sklearn.metrics import mean_squared_error 
 
 def mse(matrix):
     #Calcula el mean square error
@@ -87,11 +88,39 @@ linreg = lm.LinearRegression(fit_intercept = False)
 # Se ajusta la regresion con los datos de entrenamiento
 result = linreg.fit(Xtrain, ytrain)
 
-#zsc = (X - X.mean())/X.std()
-#Z = stats.zscore(X['lcavol'])
 
-Z = zscore(X, y, linreg.predict(X), linreg.coef_)
-print Z
+# Funcion que calcula la desviacion estandar
+def desvest(mse, n, j):
+	desv_est = np.sqrt(mse * n / (n - j - 1))
+	return desv_est
+# Funcion que calcula las diagonales de la matriz (xTx)-1
+def diagval(xtrain):	
+	diag_val = np.diag(np.linalg.pinv(np.dot(xtrain.T, xtrain))) 
+	return diag_val
+# Funcion que calcula el zscore
+def zzscore(coef, desv_est, diagonal):
+	z = np.divide(coef, np.multiply(desv_est, np.sqrt(diagonal))) 
+	return z
+
+
+# Se obtiene el valor de y estimado para los datos de entrenamiento
+yptrain = linreg.predict(Xtrain) 
+# Se calcula el error cuadratico medio de los datos de entrenamiento
+msetrain = mean_squared_error(ytrain, yptrain) 
+# Para realizar las iteraciones, se guarda en n la cantidad de datos, en este caso,
+# son 67 datos de entrenamiento
+n = ytrain.shape[0]
+# Se guarda en j la cantidad de variables, en este caso son 9
+j = Xtrain.shape[1] 
+
+# Se calcula la desviacion estandar
+desv_est = desvest(msetrain, n, j)
+# Se obtiene la diagonal de los datos de entrenamiento
+diag_val = diagval(Xtrain)
+# Se calculan los zscore
+Zscores = zzscore(linreg.coef_, desv_est, diag_val)
+print Zscores
+
 #print zsc['lcavol']
 #print linreg.coef_
 #print("Residual sum of squares: %.2f" % np.mean((linreg.predict(Xtest) - ytest) ** 2))

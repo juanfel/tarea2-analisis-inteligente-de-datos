@@ -1,6 +1,6 @@
 \documentclass[letter, 10pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[spanish]{babel}
+\usepackage[spanish, es-tabla]{babel}
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage[dvips]{graphicx}
@@ -63,8 +63,37 @@ Para comenzar con el desarrollo de la regresión lineal, en primer lugar se debe
 
 Luego, al dataset se le debe quitar la columna \textbf{lpsa}, ya que esta formaría el vector y que corresponde a la función que se desea predecir. Al último dataframe, se le inserta una nueva columna llamada \textbf{intercept} copuesta solo de unos. Esto se realiza para que el modelo (ecuación) tenga un desplazmiento constante, el que actúa como intercepción \cite{P2}. Además, si se realiza el ajuste sin esa columna de unos, puede ocurrir que el coeficiente de determinación ($R^2$) pueda ser menor que cero. Es fácil de entender: puede que los regresores ensayados no den cuenta de la variabilidad de $\vec{y}$, y $SSE$ sea por tanto grande. Si acontece que $\vec{y}$ tiene poca variabilidad en torno a su media, $SST$ será en cambio pequeño, y $SST-SSE$ puede fácilmente ser negativo \cite{P1}.\\
 
-Luego, de realizar estos pasos, se realiza una regresión lineal de mínimos cuadrados básica.
+Luego, de realizar estos pasos, se realiza una regresión lineal de mínimos cuadrados básica, para la cual se obtienen los valores del z-score y los pesos para cada variable. Para el cálculo del z-score, se realiza lo siguiente:
 
+\begin{equation}
+z_j=\frac{\hat{\beta }_j}{\hat{\sigma }\sqrt{v_j}}
+\end{equation}
+
+En donde, $\hat{\beta }_j$ son los coeficientes estimados por la regresión lineal del atributo $j$, $\hat{\sigma }$ corresponde a la desviación estandar estimada y $v_j$ es el $j$-ésimo elemento de $\left ( X^{T}X \right )^{-1}$. El iterador $j$ recorre todo el universo de atributos, por lo que en este caso $j=1,2,...,9$. La Tabla \ref{zscore} muestra un resumen con los valores obtenidos para cada variable.
+
+\begin{table}[!hbt] 
+\begin{center}
+\begin{tabular}{| c | r | r |} 
+\hline
+\textbf{Variable} & \textbf{Peso} & \textbf{Z Score}\\ 
+\hline 
+lcavol & 0.676 & 5.319\\ 
+lweight &0.261 & 2.727\\
+age &-0.141 & -1.384\\
+lbph &0.209 & 2.038\\
+svi & 0.304& 2.448\\
+lcp & -0.287& -1.851\\
+gleason & -0.021& -0.145\\
+pgg45 &0.266 &  1.723\\
+intercept &2.465 & 27.359\\
+\hline 
+\end{tabular}
+\caption{Recuadro con los coeficientes (pesos) y el valor del Z Score para cada variable.} 
+\label{table:zscore}
+\end{center} 
+\end{table}
+
+Dada la Tabla \ref{zscore}, se puede saber qué variables están más correlacionadas con la respuesta en base al valor que toma Z-Score, ya que las variables que tienen los mayores valores en valor absoluto del Z-Score, son las que más importancia y correlación tienen, por lo que son las que se deben seleccionar. En este caso, las variables más significativas por orden de importancia serían \textbf{lcavol}, \textbf{lweight}, \textbf{svi} y \textbf{lbph}. Esto tiene mucho sentido, ya que \textbf{lcavol} corresponde al volumen del cáncer, por lo que mientras más grande sea, mayor es la probabilidad de que tenga más PSA en la sangre.
 
 \section{Selección de Atributos}
 
