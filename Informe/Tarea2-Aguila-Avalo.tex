@@ -182,11 +182,7 @@ muestra a continuación:
 
 \begin{figure}[H]
   \centering
-<<<<<<< HEAD
- \includegraphics[width=0.6\textwidth]{Images/p2_fig1} 
-=======
  \includegraphics[width=0.6\textwidth]{Images/p2_fig1.png} 
->>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Error de entrenamiento vs error de test para Forward Step-wise
     Selection. A simple vista se puede observar un valor óptimo donde conviene
     dejar de seleccionar variables. }
@@ -219,11 +215,7 @@ se puede confirmar con su gráfico asociado.
 
 \begin{figure}[H]
   \centering
-<<<<<<< HEAD
- \includegraphics[width=0.6\textwidth]{Images/p2_fig2} 
-=======
  \includegraphics[width=0.6\textwidth]{Images/p2_fig2.png} 
->>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Error de entrenamiento vs error de test para Backward Step-wise
     Selection. Tiene el mismo comportamiento que FSS.}
   \label{fig:p2_g2}
@@ -252,19 +244,17 @@ en el siguiente gráfico:
 
 \begin{figure}[H]
   \centering
-<<<<<<< HEAD
-  \includegraphics[width=0.6\textwidth]{Images/p3_fig1} 
-=======
   \includegraphics[width=0.6\textwidth]{Images/p3_fig1.png} 
->>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Gráfico del camino de regularización de Ridge Regression. A medida
     que disminuye $\lambda$ se obtiene una mayor diferenciación entre cada atributo.}
   \label{fig:p3_g1}
 \end{figure}
 
 Al disminuir el parámetro de regularización se vé como los pesos de cada
-atributo empiezan a diferenciarse más. Con $\lambda$ más grande los atributos
+atributo empiezan a diferenciarse más, eventualmente llegando a ser los mismos
+que regresión lineal ordinaria. Con $\lambda$ más grande los atributos
 empiezan a converger a un mismo peso.
+
 \subsection{Lasso Regression}
 \textit{Lasso Regression}hace el mismo trabajo que Ridge, pero también tiene
 funciones en reducción de variables.\\
@@ -275,11 +265,7 @@ siguiente gráfico para Lasso:
 
 \begin{figure}[H]
   \centering
-<<<<<<< HEAD
-  \includegraphics[width=0.6\textwidth]{Images/p3_fig2} 
-=======
   \includegraphics[width=0.6\textwidth]{Images/p3_fig2.png} 
->>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Gráfico del camino de regularización de Lasso Regression.}
   \label{fig:p3_g1}
 \end{figure}
@@ -288,7 +274,7 @@ A diferencia de Ridge, Lasso directamente elimina variables a medida que aumenta
 su $\lambda$. En el caso anterior con valores de regularización altos igual
 habían trazas de variables que en realidad son insignificantes. En el caso de
 Lasso las variables que menos aportan son sistemáticamente hechas cero, llegando
-un punto donde no todos los atributos tienen peso nulo.
+un punto donde todos los atributos tienen peso nulo.
 
 \subsection{Error de pruebas de Ridge Regression}
 El error de pruebas obtenido para Ridge Regression se encuentra en el gráfico
@@ -296,30 +282,22 @@ siguiente:
 
 \begin{figure}[H]
   \centering
-<<<<<<< HEAD
-  \includegraphics[width=0.6\textwidth]{Images/p3_fig3} 
-=======
   \includegraphics[width=0.6\textwidth]{Images/p3_fig3.png} 
->>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Error de pruebas vs error de entrenamiento para RIDGE. Se puede
     observar el patrón de sobre y subajuste.}
   \label{fig:p3_g2}
 \end{figure}
 
 Se puede observar que el punto donde ambos errores son iguales está entre 10 y
-100. Si se trata de escoger $\lambda$ usando éste criterio se debería considerar
-mejor escoger un valor superior a 10 para evitar el sobreajuste.
+100. Con éste gráfico se puede obtener también que el valor que minimiza el error de
+test está en 10. 
 \subsection{Error de pruebas de Lasso Regression}
 Los errores de entrenamiento y pruebas para Lasso Regression se encuentran
 resumidos en el siguiente gráfico:
 
 \begin{figure}[H]
   \centering
-<<<<<<< HEAD
-  \includegraphics[width=0.6\textwidth]{Images/p3_fig4} 
-=======
   \includegraphics[width=0.6\textwidth]{Images/p3_fig4.png} 
->>>>>>> e0cf97e56a517f5af7fea26cfb70cdea0aed1267
   \caption{Error de pruebas vs error de entrenamiento para RIDGE. Se puede
     observar el patrón de sobre y subajuste.}
   \label{fig:p3_g2}
@@ -333,19 +311,22 @@ Hay que mencionar que existe una anomalía en $\lambda = 1$. El error de
 entrenamiento se mantiene constante después de ese punto, al igual que el de
 test. Esto corresponde a que en ese punto todas las variables tienen peso 0, por
 lo cual no hay error que medir.
+
+Si se trata de escoger el valor que minimiza el error de test, éste se
+encontraría en 0.1.
 \subsection{Encontrar los valores optimos para cada tipo de regularizador}
 Usando los gráficos se puede tener una idea del valor óptimo, pero por el rango
 no se puede dar un número exacto. Para encontrar dicho valor se usará kfold
 cross validation con $K = 10$ cajas.
 
 Para Ridge, cross validation encontró que el mejor parámetro es 2.442053 con un
-$MSE = 0.751881$. Esto está en territorio de sobreajuste de acuerdo al gráfico.
-Pero también es el punto donde el error de test está en su mínimo, de acuerdo al
-gráfico, así que tiene sentido usar dicho valor de $\lambda$.\\
+$MSE = 0.751881$. \\
 
-En el caso de Lasso, el resultado es exactamente $\lambda = 0.01$. Éste es el punto donde el
-error de test empieza a subir. Por otra parte, a diferencia del caso anterior,
-se encuentra firmemente en territorio de underfitting.
+En el caso de Lasso, el resultado es exactamente $\lambda = 0.01$, con $MSE =
+0.758661$.\\
+
+Ambos casos fueron peores que usar los sets de entrenamiento y pruebas por
+separado.
 \section{Predicción de Utilidades de Películas}
 
 Para esta sección, se trabajó con un conjunto de datos sobre películas vistas en cines de Estados Unidos durante los años 2005 y 2009. Lo que se desea predecir es el volumen de utilidades (en dólares) que se obtienen por el estreno de una película.\\
