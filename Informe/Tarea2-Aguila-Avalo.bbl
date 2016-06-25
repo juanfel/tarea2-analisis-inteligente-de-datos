@@ -1,0 +1,26 @@
+\begin{thebibliography}{1}
+
+\bibitem{D}
+{D}ataset de los datos de {C}áncer de {P}róstata.
+\newblock
+  \url{http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data}.
+\newblock Accessed: 20-06-2016.
+
+\bibitem{DD}
+{D}escripción de los {D}atos.
+\newblock
+  \url{http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.info.txt}.
+\newblock Accessed: 20-06-2016.
+
+\bibitem{P2}
+Das D. Gimpel K. Smith N.~A. Joshi, M.
+\newblock The {E}lements of {S}tatistical {L}earning, {S}econd {E}dition.
+\newblock {\em Springer {S}eries in {S}tatistics}, 2009.
+
+\bibitem{P1}
+Fernando {T}usell.
+\newblock Análisis de {R}egresión. {I}ntroducción {T}eórica y {P}ráctica
+  basada en {R}.
+\newblock 2011.
+
+\end{thebibliography}

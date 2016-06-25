@@ -67,7 +67,7 @@ Luego, de realizar estos pasos, se realiza una regresión lineal de mínimos cua
 z_j=\frac{\hat{\beta}_j}{\hat{\sigma }\sqrt{v_j}}
 \end{equation}
 
-En donde, $\hat{\beta }_j$ son los coeficientes estimados por la regresión lineal del atributo $j$, $\hat{\sigma }$ corresponde a la desviación estándar estimada y $v_j$ es el $j$-ésimo elemento de $\left ( X^{T}X \right )^{-1}$. El iterador $j$ recorre todo el universo de atributos, por lo que en este caso $j=1,2,...,9$. La Tabla \ref{zscore} muestra un resumen con los valores obtenidos para cada variable.
+En donde, $\hat{\beta }_j$ son los coeficientes estimados por la regresión lineal del atributo $j$, $\hat{\sigma }$ corresponde a la desviación estándar estimada y $v_j$ es el $j$-ésimo elemento de $\left ( X^{T}X \right )^{-1}$. El iterador $j$ recorre todo el universo de atributos, por lo que en este caso $j=1,2,...,9$. La Tabla 1 muestra un resumen con los valores obtenidos para cada variable.
 
 \begin{table}[!hbt] 
 \begin{center}
@@ -91,9 +91,9 @@ intercept &2.465 & 27.359\\
 \end{center} 
 \end{table}
 
-Dada la Tabla \ref{zscore}, se puede saber qué variables están más correlacionadas con la respuesta en base al valor que toma Z-Score, ya que las variables que tienen los mayores valores en valor absoluto del Z-Score, son las que más importancia y correlación tienen, por lo que son las que se deben seleccionar. En este caso, las variables más significativas por orden de importancia serían \textbf{lcavol}, \textbf{lweight}, \textbf{svi} y \textbf{lbph}. Esto tiene mucho sentido, ya que \textbf{lcavol} corresponde al volumen del cáncer, por lo que mientras más grande sea, mayor es la probabilidad de que tenga más PSA en la sangre. Al existir un Z-Score mayor que 2 en valor absoluto, esto quiere decir que la variable es significativa al nivel del 5\%, por lo que las variables menores a 2, como son \textbf{age}, \textbf{lcp}, \textbf{gleason} y \textbf{pgg45}.\\
+Dada la Tabla 1, se puede saber qué variables están más correlacionadas con la respuesta en base al valor que toma Z-Score, ya que las variables que tienen los mayores valores en valor absoluto del Z-Score, son las que más importancia y correlación tienen, por lo que son las que se deben seleccionar. En este caso, las variables más significativas por orden de importancia serían \textbf{lcavol}, \textbf{lweight}, \textbf{svi} y \textbf{lbph}. Esto tiene mucho sentido, ya que \textbf{lcavol} corresponde al volumen del cáncer, por lo que mientras más grande sea, mayor es la probabilidad de que tenga más PSA en la sangre. Al existir un Z-Score mayor que 2 en valor absoluto, esto quiere decir que la variable es significativa al nivel del 5\%, por lo que las variables menores a 2, como son \textbf{age}, \textbf{lcp}, \textbf{gleason} y \textbf{pgg45}.\\
 
-Luego, se aplica Validación Cruzada o \textit{Cross Validation} con 5 y 10 bloques (k-folds) sobre los datos de entrenamiento, esto quiere decir, que los datos se dividen en 5 o 10 cajas. Para esto, es necesario realizar el ajuste de regresión lineal cada vez que se cambia el número de folds para que la estimación sea razonable. La Tabla \ref{msecross} muestra un resumen de los errores de predicción obtenidos.
+Luego, se aplica Validación Cruzada o \textit{Cross Validation} con 5 y 10 bloques (k-folds) sobre los datos de entrenamiento, esto quiere decir, que los datos se dividen en 5 o 10 cajas. Para esto, es necesario realizar el ajuste de regresión lineal cada vez que se cambia el número de folds para que la estimación sea razonable. La Tabla 2 muestra un resumen de los errores de predicción obtenidos.
 
 \begin{table}[!hbt] 
 \begin{center}
@@ -111,7 +111,7 @@ Training k=10 &0.757\\
 \end{center} 
 \end{table}
 
-De la Tabla \ref{msecross}, se puede observar que para los datos de entrenamiento mientras más cantidad de bloques se utilicen en la validación cruzada, menor será el error de predicción obtenido, pero así mismo también aumentará la complejidad del algoritmo, dado que, si se aumenta la cantidad de k de tal forma que sea del mismo tamaño que la cantidad de datos, se obtendrá un error muy similar al real sin validación cruzada. Por otra parte, si se analiza el error del conjunto de prueba, se ve que el error es mucho menor. Este efecto se debe a la falta de regularización, ya que en validación cruzada se puede producir subajuste (underfitting) o sobreajuste (overfitting).\\
+De la Tabla 2, se puede observar que para los datos de entrenamiento mientras más cantidad de bloques se utilicen en la validación cruzada, menor será el error de predicción obtenido, pero así mismo también aumentará la complejidad del algoritmo, dado que, si se aumenta la cantidad de k de tal forma que sea del mismo tamaño que la cantidad de datos, se obtendrá un error muy similar al real sin validación cruzada. Por otra parte, si se analiza el error del conjunto de prueba, se ve que el error es mucho menor. Este efecto se debe a la falta de regularización, ya que en validación cruzada se puede producir subajuste (underfitting) o sobreajuste (overfitting).\\
 
 Se realiza un gráfico llamado ``quantile-quantile plot" para poder analizar si tiene sentido la hipótesis de que los residuos del modelo siguen una distribución normal. El gráfico se puede ver en la Figura \ref{qqplot}.
 
@@ -352,7 +352,7 @@ Ridge Regression & 0.590\\
 \end{center} 
 \end{table}
 
-De la Tabla \ref{peliculas}, se observa que el que tuvo mejores resultados, o acercándose al esperado de 0.75, fue el modelo de Ridge, utilizando un alpha de 0.2. Se intentó en primer lugar, con el modelo de regresión lineal ordinario, pero dio resultados bastante malos. También se realizó con Lasso Regression, pero con este modelo se obtenían resultados negativos. \\
+De la Tabla 3, se observa que el que tuvo mejores resultados, o acercándose al esperado de 0.75, fue el modelo de Ridge, utilizando un alpha de 0.2. Se intentó en primer lugar, con el modelo de regresión lineal ordinario, pero dio resultados bastante malos. También se realizó con Lasso Regression, pero con este modelo se obtenían resultados negativos. \\
 
 Finalmente, con ninguno de los 3 modelos se pudo obtener un coeficiente de determinación superior al 0.59, por lo que Ridge Regression es el modelo que mejor funcionó.
 
